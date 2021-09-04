@@ -112,7 +112,7 @@ void patch_mem(task_t task, uint64_t address, mach_vm_size_t size, unsigned shor
         fprintf(stdout, "Already patched\n");
         mach_vm_deallocate(mach_task_self(), data, dataCnt);
     }else{
-        fprintf(stderr, "Incorrect version of process or ASRL Offset\n");
+        fprintf(stderr, "Incorrect version of process or ASLR Offset\n");
         mach_vm_deallocate(mach_task_self(), data, dataCnt);
     }
 }
@@ -155,8 +155,8 @@ int main(int argc, const char * argv[]) {
         NSArray *lines=[outputString componentsSeparatedByString:@"\n"];
         uint64_t aslr_offset=0;
         for (NSString *line in lines) {
-            if ([line rangeOfString:@"WebInspector"].location != NSNotFound) {
-                NSString *regStr=@"\\b00007ff\\w+\\b";
+            if ([line rangeOfString:@"WebInspector."].location != NSNotFound) {
+                NSString *regStr=@"\\b0*7ff\\w+\\b";
                 NSArray *arr=matchStringToRegexString(line, regStr);
                 NSString *offsetStr=arr[0];
                 NSScanner *scanner = [NSScanner scannerWithString:offsetStr];
@@ -167,8 +167,7 @@ int main(int argc, const char * argv[]) {
         if (aslr_offset == 0) {
             fprintf(stderr, "WebInspector's memory offset can't be figured out!\n");
         }
-        
-       patch_mem(remoteTask, aslr_offset+0x000000000006c660, sizeof(unsigned short), 0xc084, 0xdb84);
+       patch_mem(remoteTask, aslr_offset+0x7baff, sizeof(unsigned short), 0xc084, 0xdb84);
     }
     return 0;
 }
