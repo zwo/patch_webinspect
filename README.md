@@ -37,8 +37,11 @@ image lookup -v -r -s "allowApplication"
 disass -s 0x00007ff927e6692f -c 50
 # find the correct address (+ aslr_offset)
 ```
+
+Open `main.m`, scroll to the last line of code, change the visual memory address `0x6c660` to that you see on your disassembler.
+
 ```c
-patch_mem(remoteTask, aslr_offset+0x000000000006c660, sizeof(unsigned short), 0xc084, 0xdb84);
+patch_mem(remoteTask, aslr_offset+0x6c660, sizeof(unsigned short), 0xc084, 0xdb84);
 ```
 
 
