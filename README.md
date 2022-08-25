@@ -24,12 +24,25 @@ First of all, disable SIP (System Integrity Protection), otherwise, `task_for_pi
 ```
 By searching `_allowApplication`, you can locate the method `-[RWIRelayDelegateMac _allowApplication:bundleIdentifier:]`, where you can find the opcodes to test for `isProxyApplication`'s result, as the second image shown above.
 
+**Or** you can get the address with lldb:
+```bash
+# start safari
+lldb -p $(pgrep webinspectord)
+```
 
-Open `main.m`, scroll to the last line of code, change the visual memory address `0x000000000006c660` to that you see on your disassembler.
-
+In lldb run the following:
+```
+image lookup -v -r -s "allowApplication"
+# get the adress from range range = [0x00007ff927e6692f-0x00007ff927e669d5)
+disass -s 0x00007ff927e6692f -c 50
+# find the correct address (+ aslr_offset)
+```
 ```c
 patch_mem(remoteTask, aslr_offset+0x000000000006c660, sizeof(unsigned short), 0xc084, 0xdb84);
 ```
+
+
+
 
 2. In your terminal, compile it with make command
 ```bash
