@@ -167,7 +167,9 @@ int main(int argc, const char * argv[]) {
         if (aslr_offset == 0) {
             fprintf(stderr, "WebInspector's memory offset can't be figured out!\n");
         }
-       patch_mem(remoteTask, aslr_offset+0x7baff, sizeof(unsigned short), 0xc084, 0xdb84);
+        
+        fprintf(stdout, "aslr_offset 0x%llx\n", aslr_offset);
+        patch_mem(remoteTask, aslr_offset+0x81974, sizeof(unsigned short), 0xc084, 0xdb84);
     }
     return 0;
 }
